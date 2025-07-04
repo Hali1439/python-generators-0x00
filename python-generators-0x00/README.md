@@ -1,6 +1,4 @@
-
 # python-generators-0x00
-
 
 ## Overview
 
@@ -12,7 +10,10 @@ This project demonstrates advanced usage of Python generators for efficient data
 
 - **Database Initialization**: Automates setup of a MySQL database (`ALX_prodev`) and a `user_data` table with a clear schema.
 - **CSV Data Seeding**: Seeds the database from a `user_data.csv` file, ensuring idempotency and integrity.
-- **Generator Patterns**: Lays the groundwork for streaming database rows using Python generators, enabling memory-efficient data processing.
+- **Generator Patterns**: Implements streaming, batch, and paginated access to SQL data using Python generators for memory efficiency.
+- **Batch Processing**: Processes user data in configurable batches for scalable workflows.
+- **Lazy Pagination**: Simulates paginated access, loading each page only when needed.
+- **Memory-Efficient Aggregation**: Computes aggregates (such as average age) without loading the full dataset into memory.
 - **Extensible Design**: Functions are modular, type-annotated, and ready for extension with error handling, logging, and configuration.
 
 ---
@@ -20,9 +21,10 @@ This project demonstrates advanced usage of Python generators for efficient data
 ## Learning Objectives
 
 - Master Python generator functions for iterative, lazy data processing.
-- Handle large datasets efficiently using batch processing and streaming.
+- Handle large datasets efficiently using batch processing, streaming, and lazy loading.
 - Integrate Python with SQL databases for robust data management.
 - Write clean, reusable, and maintainable backend code.
+- Employ advanced patterns in Python systems architecture.
 
 ---
 
@@ -31,10 +33,15 @@ This project demonstrates advanced usage of Python generators for efficient data
 ```
 python-generators-0x00/
 │
-├── seed.py        # Database setup and seeding logic
-├── 0-main.py      # Entry point for initializing and testing seed functionality
-├── user_data.csv  # Sample data for seeding the database
-└── README.md      # This documentation
+├── seed.py               # Database setup and seeding logic
+├── 0-main.py             # Entry point for initializing and testing seed functionality
+├── 0-stream_users.py     # Generator for streaming users one by one from the database
+├── 1-batch_processing.py # Batch processing using generators
+├── 2-lazy_paginate.py    # Lazy loading pages of data using generators
+├── 1-main.py             # Test harness for lazy pagination
+├── 4-stream_ages.py      # Memory-efficient aggregation of user ages using generators
+├── user_data.csv         # Sample data for seeding the database
+└── README.md             # This documentation
 ```
 
 ---
@@ -75,6 +82,38 @@ python-generators-0x00/
    [(user_id, name, email, age), ...]
    ```
 
+4. **Stream Users One-by-One**
+
+   ```bash
+   ./1-main.py
+   ```
+
+   Output: Prints the first few database rows as Python dicts (generator pattern).
+
+5. **Batch Processing**
+
+   ```bash
+   ./2-main.py
+   ```
+
+   Output: Prints users over the age of 25 in batches (configurable batch size).
+
+6. **Lazy Pagination**
+
+   ```bash
+   ./3-main.py
+   ```
+
+   Output: Prints users page by page, loading each page only when needed.
+
+7. **Memory-Efficient Aggregation**
+
+   ```bash
+   ./4-stream_ages.py
+   ```
+
+   Output: Prints the average age of users, computed without loading all ages into memory.
+
 ---
 
 ## Key Functions
@@ -84,14 +123,21 @@ python-generators-0x00/
 - `connect_to_prodev()`: Connects to the `ALX_prodev` database.
 - `create_table(connection)`: Creates `user_data` table if it doesn't exist.
 - `insert_data(connection, csv_path)`: Seeds table from CSV, avoiding duplicates.
+- `stream_users()`: Yields users one by one for streaming.
+- `stream_users_in_batches(batch_size)`: Yields users in batches.
+- `batch_processing(batch_size)`: Yields users over age 25 in batches.
+- `lazy_pagination(page_size)`: Yields database users in lazy-loaded pages.
+- `stream_user_ages()`: Yields user ages one by one.
+- `average_user_age()`: Prints the average age using a generator for memory efficiency.
 
 ---
 
-##  Notes
+## Notes
 
 - **Type Hints**: All functions are type-annotated for clarity.
 - **Idempotency**: Seeding is safe to rerun; no duplicate users.
 - **Extensibility**: Codebase is structured for easy extension—add logging, configuration, or error handling as needed.
+- **Checker Compliance**: Some scripts include `return` at the end of generator functions to satisfy static checkers, though this is not required in idiomatic Python.
 
 ## License
 
